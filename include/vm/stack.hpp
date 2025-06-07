@@ -2,17 +2,16 @@
 
 #include "../shared/shared.hpp"
 
-#include <cstdint>
-#include <stdexcept>
+#include <cstddef>
 
 class Stack {
 private:
-  std::uint8_t st_int[MAX_STACK_SIZE];
-  std::size_t sp;
+  uint8_t st_int[MAX_STACK_SIZE];
+  size_t sp = 0;
 
 public:
-  template <typename T> void push(T &value);
-  template <typename T> T pop();
-  template <typename T> T peek();
-  void set_sp(int n);
+  void push(uint8_t value[], size_t size);
+  void pop(uint8_t dest[], size_t size);
+  void peek(uint8_t dest[], size_t size);
+  void set_sp(size_t n);
 };
