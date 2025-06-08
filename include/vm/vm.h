@@ -14,10 +14,11 @@ typedef struct vm {
   size_t ip;
   size_t bt_size;
   Stack stack;
-  uint8_t bt[MAX_STACK_SIZE];
+  uint64_t reg[16];
+  uint8_t *bt;
 } VM;
 
-bool vm_init(VM *vm);
+bool vm_init(VM *vm, uint8_t *bt);
 bool vm_adv_ptr(VM *vm);
 int vm_exec_inst(VM *vm);
 

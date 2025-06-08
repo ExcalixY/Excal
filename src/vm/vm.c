@@ -1,8 +1,9 @@
 #include "../../include/vm/vm.h"
 
-bool vm_init(VM *vm) {
-  vm->stack.sp = 0;
-
+bool vm_init(VM *vm, uint8_t *bt) {
+  vm->bt = bt;
+  vm->bt_size = sizeof(*vm->bt);
+  vm->ip = -1;
   return true;
 }
 
