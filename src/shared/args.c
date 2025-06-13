@@ -85,7 +85,8 @@ void parse_args(Args args[], CompileArgs *comp_args, int argc, char **argv) {
           if (i < argc - 1) {
             args[j].action(comp_args, argv[++i]);
           } else {
-            write_err(ERR_COMP_MISSING_ARG, argc, "Missing argument.");
+            write_err(ERR_COMP_MISSING_ARG, ERR_FATAL, argc,
+                      "Missing argument.");
           }
         }
       }

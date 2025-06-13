@@ -2,7 +2,10 @@
 
 #include <memory.h>
 
-bool stack_init(Stack *stack) { stack->sp = 0; }
+bool stack_init(Stack *stack) {
+  stack->sp = 0;
+  return true;
+}
 
 bool stack_push(Stack *stack, uint8_t *value, size_t size) {
   if (stack->sp + size > MAX_STACK_SIZE) {
@@ -10,12 +13,13 @@ bool stack_push(Stack *stack, uint8_t *value, size_t size) {
   }
 
   memcpy(&stack->st_int[stack->sp], value, size);
-
   stack->sp += size;
+
+  return true;
 }
 
 bool stack_pop(Stack *stack, uint8_t *dest, size_t size) {
-  if (stack->sp - size < 0) {
+  if (stack->sp < size) {
     return false;
   }
 
@@ -26,7 +30,7 @@ bool stack_pop(Stack *stack, uint8_t *dest, size_t size) {
 }
 
 bool stack_peek(Stack *stack, uint8_t *dest, size_t size) {
-  if (stack->sp - size < 0) {
+  if (stack->sp < size) {
     return true;
   }
 

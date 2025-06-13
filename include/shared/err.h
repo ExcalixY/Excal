@@ -1,13 +1,22 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+#include <stdarg.h>
+
+typedef enum {
+  ERR_WARNING,
+  ERR_INFO,
+  ERR_FATAL,
+} ErrSeverity;
+
 typedef enum {
   // ========== No Error ==========
   NO_ERR = 0,
+  ERR_FILE_NOT_FOUND,
+  ERR_FILE_UNKNOWN_TYPE,
 
   // ========== Compiler Errors (1000–1999) ==========
-  ERR_COMP_FILE_NOT_FOUND = 1000, // Source file not found
-  ERR_COMP_SYNTAX,                // General syntax error
+  ERR_COMP_SYNTAX = 1000,         // General syntax error
   ERR_COMP_UNDECLARED_IDENTIFIER, // Variable or symbol used before definition
   ERR_COMP_TYPE_MISMATCH,         // Conflicting types in operation
   ERR_COMP_INVALID_LITERAL,       // Malformed number, string, etc.
@@ -18,8 +27,7 @@ typedef enum {
   ERR_COMP_MISSING_ARG,           // Missing another argument in compiler call
 
   // ========== Assembler Errors (2000–2999) ==========
-  ERR_ASM_FILE_NOT_FOUND = 2000, // Assembly file not found
-  ERR_ASM_INVALID_OPCODE,        // Unknown or malformed instruction
+  ERR_ASM_INVALID_OPCODE = 2000, // Unknown or malformed instruction
   ERR_ASM_SYNTAX,                // Assembly syntax error
   ERR_ASM_UNDEFINED_LABEL,       // Jump/branch to unknown label
   ERR_ASM_DUPLICATE_LABEL,       // Label redefined
@@ -27,6 +35,7 @@ typedef enum {
   ERR_ASM_WRITE_FAIL,            // Failed to write bytecode output
   ERR_ASM_OVERFLOW,              // Instruction size or byte overflow
   ERR_ASM_INTERNAL,              // Internal assembler error
+  ERR_ASM_BUFFER_OVERFLOW,       // Instruction reached over 32 characeters
 
   // ========== VM Runtime Errors (3000–3999) ==========
   ERR_VM_STACK_UNDERFLOW = 3000, // Tried to pop from empty stack
@@ -38,11 +47,12 @@ typedef enum {
   ERR_VM_BAD_SYSCALL,            // Invalid or undefined syscall
   ERR_VM_HALT_UNEXPECTED,        // Halt with inconsistent state
   ERR_VM_REGISTER_UNDEFINED,     // Reading from uninitialized register
-  ERR_VM_INTERNAL                // Internal VM failure
+  ERR_VM_INTERNAL,               // Internal VM failure
 } ErrCodes;
 
-const char *get_err_msg(ErrCodes err_code);
+const char *err_get_msg(ErrCodes err_code);
 
-void write_err(ErrCodes err_code, int pos, const char *msg);
+void write_err(ErrCodes err_code, ErrSeverity err_sev, int pos, const char *msg,
+               ...);
 
 #endif

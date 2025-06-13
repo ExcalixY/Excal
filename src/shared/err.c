@@ -1,14 +1,19 @@
 #include "../../include/shared/err.h"
 
+#include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-const char *get_err_msg(ErrCodes err_code) {
+const char *err_get_msg(ErrCodes err_code) {
   switch (err_code) {
 
   case NO_ERR:
     return "NO_ERR";
-  case ERR_COMP_FILE_NOT_FOUND:
-    return "ERR_COMP_FILE_NOT_FOUND";
+  case ERR_FILE_NOT_FOUND:
+    return "ERR_FILE_NOT_FOUND";
+  case ERR_FILE_UNKNOWN_TYPE:
+    return "ERR_FILE_UNKNOWN_TYPE";
+
   case ERR_COMP_SYNTAX:
     return "ERR_COMP_SYNTAX";
   case ERR_COMP_UNDECLARED_IDENTIFIER:
@@ -26,8 +31,6 @@ const char *get_err_msg(ErrCodes err_code) {
   case ERR_COMP_INTERNAL:
     return "ERR_COMP_INTERNAL";
 
-  case ERR_ASM_FILE_NOT_FOUND:
-    return "ERR_ASM_FILE_NOT_FOUND";
   case ERR_ASM_INVALID_OPCODE:
     return "ERR_ASM_INVALID_OPCODE";
   case ERR_ASM_SYNTAX:
@@ -71,8 +74,30 @@ const char *get_err_msg(ErrCodes err_code) {
   }
 }
 
-void write_err(ErrCodes err_code, int pos, const char *msg) {
-  printf("\033[1;37mExcal: \033[1;31mERROR\n");
-  printf("\033[1;33m%s [%d] \033[1;37m%s\n", get_err_msg(err_code), pos, msg);
-  printf("\033[0m"); // Reset color
+const char *err_get_severity(ErrSeverity err_sev) {
+  switch (err_sev) {
+  case ERR_WARNING:
+    return "\033[1;33mWARNING";
+  case ERR_FATAL:
+    return "\033[1;31mFATAL";
+  case ERR_INFO:
+    return "\033[1;36mINFO";
+  default:
+    return "\033[1;31mERROR";
+  }
+}
+
+void write_err(ErrCodes err_code, ErrSeverity err_sev, int pos, const char *msg,
+               ...) {
+  printf("\033[1;37mExcal: %s\n", err_get_severity(err_sev));
+  printf("\033[1;33m%s [%d]\033[0m\n", err_get_msg(err_code), pos);
+
+  va_list args;
+  va_start(args, msg);
+  vprintf(msg, args);
+  va_end(args);
+
+  printf("\n\033[0m");
+
+  exit(1);
 }

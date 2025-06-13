@@ -19,6 +19,9 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
 # Main executable
 add_executable(Excal ${SOURCES})
 
+target_link_libraries(Excal PRIVATE fstream)
+target_link_directories(Excal PRIVATE ${CMAKE_SOURCE_DIR}/lib/filestream)
+
 # Enable warnings
 target_compile_options(Excal PRIVATE -Wall -Wextra -Wpedantic)
 

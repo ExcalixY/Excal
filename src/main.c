@@ -9,7 +9,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
+
+#include <fstream.h>
 
 char *ver_comp = "0.01 ALPHA";
 Args args[ARG_COUNT];
@@ -92,18 +93,18 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  FILE *file;
+  int asm_err;
 
   if (comp_args.input_file == NULL) {
-    file = fopen(argv[1], "r");
+    asm_err = asm_init(&assembler, argv[1]);
   } else {
-    file = fopen(comp_args.input_file, "r");
+    asm_err = asm_init(&assembler, comp_args.input_file);
   }
 
-  if (!file) {
-    write_err(ERR_ASM_FILE_NOT_FOUND, 0, "Specified file was not found.");
-    return 1;
-  }
+  if (asm_err != 0)
+    return asm_err;
+
+  asm_compile(&assembler);
 
   return 0;
 }
