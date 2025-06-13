@@ -1,0 +1,10 @@
+import <Excal/IO>
+
+func<int> main() {
+  var<int> x = 1993217;
+  var<u_int> y = 1000;
+
+  IO.Print(x);
+
+  return 0;
+}
