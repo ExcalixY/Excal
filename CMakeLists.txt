@@ -10,6 +10,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Include headers
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/lib/fstream)
 
 # Collect all source files
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
@@ -19,8 +20,8 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
 # Main executable
 add_executable(Excal ${SOURCES})
 
+target_link_directories(Excal PRIVATE ${CMAKE_SOURCE_DIR}/lib/fstream)
 target_link_libraries(Excal PRIVATE fstream)
-target_link_directories(Excal PRIVATE ${CMAKE_SOURCE_DIR}/lib/filestream)
 
 # Enable warnings
 target_compile_options(Excal PRIVATE -Wall -Wextra -Wpedantic)

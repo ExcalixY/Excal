@@ -2,6 +2,7 @@
 #define ASSEMBLER_H
 
 #include "../../include/shared/shared.h"
+#include "../../lib/fstream/fstream.h"
 
 #include <fstream.h>
 #include <stdbool.h>

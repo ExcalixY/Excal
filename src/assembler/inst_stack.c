@@ -13,33 +13,28 @@ void asm_op_push(Assembler *a) {
       } else {
         uint8_t *val;
 
-        fgetu(a->buffer, MAX_BUFFER_SIZE, ", \n", a->file_in);
+        fs_getuntil_prev(&a->fs_in, a->buffer, ", \n", MAX_BUFFER_SIZE);
 
-        fputc(0x00, a->file_out);
-        fputc(type, a->file_out);
-        fputv((val = asm_parse_value(a, type)), asm_get_size(type),
-              a->file_out);
-
-        free(val);
-
-        fseek(a->file_in, -1, SEEK_CUR);
+        fs_writeb(&a->fs_out, 0x00);
+        fs_writeb(&a->fs_out, type);
+        fs_writen(&a->fs_out, asm_parse_value(a, type), asm_get_size(type));
       }
-    } while (fgetc(a->file_in) == ',');
+    } while (fs_get(&a->fs_in) == ',');
   } else if (c == '$') {
     char *reg_l[14] = {
         "R0", "R1", "R2", "R3",  "R4",  "R5",  "R6",
         "R7", "R8", "R9", "RPC", "RSP", "RBP", "RFP",
     };
 
-    fgetu(a->buffer, MAX_BUFFER_SIZE, " \n", a->file_in);
+    fs_getuntil(&a->fs_in, a->buffer, " \n", MAX_BUFFER_SIZE);
 
     for (char i = 0; i < 19; i++) {
       if (strieq(a->buffer, reg_l[i])) {
-        fputc(0x20 + i, a->file_out);
+        fs_writeb(&a->fs_in, 0x20 + i);
         return;
       }
     }
   } else if (c == '[') {
-    fgetu(a->buffer, MAX_BUFFER_SIZE, "]", a->file_in);
+    fs_getuntil(&a->fs_in, a->buffer, "]", MAX_BUFFER_SIZE);
   }
 }

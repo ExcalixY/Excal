@@ -36,7 +36,7 @@ int asm_init(Assembler *a, const char *filename) {
 
   strcpy(filename_out + str_len - 3, EXT_BIN);
 
-  if (fs_open(filename_out, &a->fs_out, F_WRITE) == 0) {
+  if (fs_open(filename_out, &a->fs_out, F_WRITE) == 1) {
     write_err(ERR_ASM_WRITE_FAIL, ERR_FATAL, 1,
               "Could not create a file of specified name");
   }
@@ -259,5 +259,6 @@ void asm_compile(Assembler *a) {
 
 void asm_stop(Assembler *a) {
   fs_close(&a->fs_in);
+  fs_flush(&a->fs_out);
   fs_close(&a->fs_out);
 }

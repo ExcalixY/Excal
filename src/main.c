@@ -5,12 +5,11 @@
 #include "../include/compiler/compiler.h"
 #include "../include/vm/vm.h"
 
+#include "../lib/fstream/fstream.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-
-#include <fstream.h>
 
 char *ver_comp = "0.01 ALPHA";
 Args args[ARG_COUNT];
